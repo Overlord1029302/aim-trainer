@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>Aim Helper</title>
+        <style>
+            body {
+                background-color: rgb(255, 255, 255);
+                position: relative; 
+            } 
+            h1 {
+                color: #333;
+                text-align: center;
+                font-family: "Arial", sans-serif;
+                font-size: 100px;
+                position: relative; 
+            }
+            #crosshair{
+                position:absolute;
+                width: 70px;
+                height: 55px;
+                cursor: pointer;
+            }   
+            #message, #time, #bestTime {
+                font-size: 24px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Aim Trainer</h1>
+        <img id="crosshair" src="crosshair.png" alt="Crosshair">
+        <div id="message">Ready to start!</div>
+        <div id="time">Time: 0s</div>
+        <div id="bestTime">Best Time: 0s</div>
+        <script>
+            let startTime, endTime;
+            let bestTime = Infinity; 
+            let timeTaken = 0;
+            const crosshair = document.getElementById('crosshair');
+            const h1 = document.querySelector('h1');
+            const message = document.getElementById('message');
+            const timeDisplay = document.getElementById('time');
+            const bestTimeDisplay = document.getElementById('bestTime');
+         
+            const h1Rect = h1.getBoundingClientRect();
+            let RandomX, RandomY;
+
+        
+            function movement() {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+            
+                do {
+                    RandomX = Math.random() * (windowWidth - 70);  
+                    RandomY = Math.random() * (windowHeight - 55); 
+                } while (
+                    RandomX >= h1Rect.left && RandomX <= h1Rect.right &&
+                    RandomY >= h1Rect.top && RandomY <= h1Rect.bottom
+                );
+
+                
+                crosshair.style.left = `${RandomX}px`;
+                crosshair.style.top = `${RandomY}px`;
+            }
+
+            
+            function startGame() {
+                movement();
+                startTime = Date.now();
+                message.textContent = "Click the crosshair!";
+            }
+
+            
+            function hitCrosshair() {
+                endTime = Date.now();
+                timeTaken = (endTime - startTime) / 1000; 
+                timeDisplay.textContent = `Time: ${timeTaken.toFixed(2)}s`;
+
+                
+                if (timeTaken < bestTime) {
+                    bestTime = timeTaken;
+                    bestTimeDisplay.textContent = `Best Time: ${bestTime.toFixed(2)}s`;
+                }
+
+                
+                setTimeout(startGame,100) ;
+            }
+          
+            
+            crosshair.addEventListener('click', hitCrosshair);
+
+            
+            startGame();
+        </script>
+    </body>
+</html>
